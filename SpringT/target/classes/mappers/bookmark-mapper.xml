@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.BookmarkMapper">
+
+	<delete id="delete">
+		delete from ${bookmark_table}
+		where ${bookmark_no} = #{bookmark_no}
+	</delete>
+	
+	<select id="total_count" resultType="Integer">
+		select count(*) total_cnt from ${bookmark_table} where ${userid} = #{userid}
+	</select>
+	
+	<select id="paging" resultType="BookmarkVO">
+		select 
+		*
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${bookmark_table} where ${userid} = #{userid} order by ${bookmark_date} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select> 
+	
+	<select id="check" resultType="Integer">
+		select count(*)
+		from ${bookmark_table} 
+		where ${userid} = #{userid}
+		and ${bookmark_table_name} = #{bookmark_table_name}
+		and ${bookmark_bno} = #{bookmark_bno}
+	</select>
+
+	<insert id="ajaxInsert">
+		insert into ${bookmark_table} (${bookmark_table_name}, ${bookmark_bno}, ${userid})
+		values (#{bookmark_table_name}, #{bookmark_bno}, #{userid})
+	</insert>
+	
+	<delete id="ajaxDelete">
+		delete from ${bookmark_table}
+		where ${bookmark_table_name} = #{bookmark_table_name} and ${bookmark_bno} = #{bookmark_bno} and ${userid} = #{userid}
+	</delete>
+	
+	<!-- 성훈 테이블 -->
+	<select id="freeboard_title" resultType="FreeboardVO">
+		select freeboard_title, userid
+		from ${freeboard_table}
+		where ${freeboard_bno} = #{bookmark_bno}
+	</select>
+
+	<select id="qaboard_title" resultType="QAboardVO">
+		select qaboard_title, userid
+		from ${qaboard_table}
+		where ${qaboard_bno} = #{bookmark_bno}
+	</select>
+
+	<select id="shareboard_title" resultType="ShareboardVO">
+		select shareboard_title, userid
+		from ${shareboard_table}
+		where ${shareboard_bno} = #{bookmark_bno}
+	</select>
+	
+	<!-- 소영 테이블 -->
+	<select id="recruit_title" resultType="RecBoardVO">
+		select recruit_title, userid
+		from ${recruit_table}
+		where ${rno} = #{bookmark_bno}
+	</select>
+	
+	<select id="employ_title" resultType="EmpBoardVO">
+		select employ_title, userid
+		from ${employ_table}
+		where ${eno} = #{bookmark_bno}
+	</select>
+	 
+</mapper>

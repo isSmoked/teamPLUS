@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.FreeboardMapper">
+
+	<insert id="insert">
+		insert into ${freeboard_table} (${freeboard_title}, ${freeboard_content}, ${freeboard_notice}, ${userid})
+		values (#{freeboard_title}, #{freeboard_content}, #{freeboard_notice}, #{userid})
+	</insert>		
+
+	<select id="select_all" resultType="FreeboardVO">
+		select * from ${freeboard_table}
+		order by ${freeboard_bno} desc
+	</select>
+	
+	<select id="select_by_bno" resultType="FreeboardVO">
+		select * from ${freeboard_table}
+		where ${freeboard_bno} = #{freeboard_bno}
+	</select>
+	
+	<update id="update">
+		update ${freeboard_table}
+		set ${freeboard_title} = #{freeboard_title}, ${freeboard_content} = #{freeboard_content}, ${freeboard_date} = sysdate, ${freeboard_notice} = #{freeboard_notice}
+		where ${freeboard_bno} = #{freeboard_bno}
+	</update>
+	
+	<delete id="delete">
+		delete from ${freeboard_table}
+		where ${freeboard_bno} = #{freeboard_bno}
+	</delete>
+	
+	<select id="total_count" resultType="Integer">
+		select count(*) total_cnt from ${freeboard_table} <include refid="search"/>
+	</select>
+	
+	<select id="paging" resultType="FreeboardVO">
+		select 
+		*
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${freeboard_table} <include refid="search"/> order by ${freeboard_date} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select> 
+	
+	<sql id="search">
+		<choose>
+			<when test="searchType == 'all'">where ${freeboard_title} like '%'||#{keyword}||'%' or ${freeboard_content} like '%'||#{keyword}||'%' or ${userid} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'title'">where ${freeboard_title} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'content'">where ${freeboard_content} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'writer'">where ${userid} = #{keyword}</when>
+			<when test="searchType == 'tc'">where ${freeboard_title} like '%'||#{keyword}||'%' or ${freeboard_content} like '%'||#{keyword}||'%'</when>
+			<otherwise></otherwise>
+		</choose>
+	</sql>
+	
+	<select id="select_by_userid" resultType="FreeboardVO">
+		select * from ${freeboard_table}
+		where ${userid} like #{userid}
+	</select>
+	
+	<select id="select_by_title_content" resultType="FreeboardVO">
+		select * from ${freeboard_table}
+		where ${freeboard_title} like #{keyword} or
+			${freeboard_content} like #{keyword}
+			order by ${freeboard_date} desc
+	</select>
+	
+	<update id="update_reply_count">
+		update ${freeboard_table}
+		set ${freeboard_replycount} = ${freeboard_replycount} + #{amount}
+		where ${freeboard_bno} = #{bno}
+	</update>
+	
+	<select id="select_notice" resultType="FreeboardVO">
+		select * from ${freeboard_table}
+		where not ${freeboard_notice} = 0 order by ${freeboard_notice} desc, ${freeboard_date} desc
+	</select>
+	
+	
+	 
+</mapper>

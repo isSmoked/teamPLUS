@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.ChatMapper">
+
+	<insert id="chatInsert">
+		insert into ${chat_table} (${chat_content}, ${chat_userid})
+		values (#{chat_content}, #{chat_userid})
+	</insert>
+		<!-- 로그인을 하면서 테이블생성 -> session으로 bno를 받아오도록 작성!
+				로그아웃하면 삭제하기  -->
+				<!-- 회원가입된 계정마다 메시지칸을 만들어
+						로그인 - 초기화 시키기 -->
+	
+	<select id="chatSelectByUserid" resultType="ChatVO">
+		select * from ${chat_table}
+		where ${chat_userid} = #{chat_userid}
+	</select>
+	
+	<select id="chatSelectByBno" resultType="ChatVO">
+		select * from ${chat_table}
+		where ${chat_bno} = #{chat_bno}
+	</select>
+	
+	<update id="chatUpdate">
+		update ${chat_table}
+		set ${chat_content} = #{chat_content}
+		where ${chat_bno} = #{chat_bno}
+	</update>
+	
+	<select id="chatSelectByDesc" resultType="ChatVO">
+		select * from (select * from ${chat_table}
+			order by rownum desc)
+		where rownum = 1
+	</select>
+</mapper>

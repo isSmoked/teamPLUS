@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.ShareboardMapper">
+
+	<insert id="insert">
+		insert into ${shareboard_table} (${shareboard_title}, ${shareboard_content}, ${shareboard_notice}, ${userid})
+		values (#{shareboard_title}, #{shareboard_content}, #{shareboard_notice}, #{userid})
+	</insert>		
+		 
+	<select id="select_all" resultType="ShareboardVO">
+		select * from ${shareboard_table}
+		order by ${shareboard_bno} desc
+	</select>
+	
+	<select id="select_by_bno" resultType="ShareboardVO">
+		select * from ${shareboard_table}
+		where ${shareboard_bno} = #{shareboard_bno}
+	</select>
+	
+	<update id="update">
+		update ${shareboard_table}
+		set ${shareboard_title} = #{shareboard_title}, ${shareboard_content} = #{shareboard_content}, ${shareboard_date} = sysdate, ${shareboard_notice} = #{shareboard_notice}
+		where ${shareboard_bno} = #{shareboard_bno}
+	</update>
+	
+	<delete id="delete">
+		delete from ${shareboard_table}
+		where ${shareboard_bno} = #{shareboard_bno}
+	</delete>
+	
+	<select id="total_count" resultType="Integer">
+		select count(*) total_cnt from ${shareboard_table} <include refid="search"/>
+	</select>
+	
+	<select id="paging" resultType="ShareboardVO">
+		select 
+		*
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${shareboard_table} <include refid="search"/> order by ${shareboard_date} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select> 
+	
+	<sql id="search">
+		<choose>
+			<when test="searchType == 'all'">where ${shareboard_title} like '%'||#{keyword}||'%' or ${shareboard_content} like '%'||#{keyword}||'%' or ${userid} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'title'">where ${shareboard_title} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'content'">where ${shareboard_content} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'writer'">where ${userid} = #{keyword}</when>
+			<when test="searchType == 'tc'">where ${shareboard_title} like '%'||#{keyword}||'%' or ${shareboard_content} like '%'||#{keyword}||'%'</when>
+			<otherwise></otherwise>
+		</choose>
+	</sql>
+	
+	<select id="select_by_userid" resultType="ShareboardVO">
+		select * from ${shareboard_table}
+		where ${userid} like #{userid}
+	</select>
+	
+	<select id="select_by_title_content" resultType="ShareboardVO">
+		select * from ${shareboard_table}
+		where ${shareboard_title} like #{keyword} or
+			${shareboard_content} like #{keyword}
+			order by ${shareboard_date} desc
+	</select>
+	
+	<update id="update_reply_count">
+		update ${shareboard_table}
+		set ${shareboard_replycount} = ${shareboard_replycount} + #{amount}
+		where ${shareboard_bno} = #{bno}
+	</update>
+	
+	<select id="select_notice" resultType="ShareboardVO">
+		select * from ${shareboard_table}
+		where not ${shareboard_notice} = 0 order by ${shareboard_notice} desc, ${shareboard_date} desc
+	</select>
+	
+	
+	 
+</mapper>

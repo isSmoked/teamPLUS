@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.spring.prj.EmpBoardMapper">
+
+	<insert id="empinsert">
+	insert into ${employ_table}
+		(${userid},
+		${employ_title},
+		${uname},
+		${career},
+		${salary},
+		${birth},
+		${gender},
+		${email},
+		${oaddress},
+		${address},
+		${detail_address},
+		${emplementtype},
+		${education},
+		${certificates},
+		${selfintroduce},
+		${militeryservice},
+		${phone},
+		${work_area})
+		values
+		(#{userid},
+		#{employ_title},
+		#{uname},
+		#{career},
+		#{salary},
+		#{birth},
+		#{gender},
+		#{email},
+		#{oaddress},
+		#{address},
+		#{detail_address},
+		#{emplementtype},
+		#{education},
+		#{certificates},
+		#{selfintroduce},
+		#{militeryservice},
+		#{phone},
+		#{work_area})
+	</insert>
+	
+	<select id="select_all" resultType="EmpBoardVO">
+		select * from ${employ_table}
+		order by ${eno} desc
+	</select>
+	
+	<select id="select_by_eno" resultType="EmpBoardVO">
+		select * from ${employ_table}
+		where ${eno} = #{eno}
+		order by ${eno} desc 
+	</select>
+	
+	<select id="select_by_work_area" resultType="EmpBoardVO">
+		select * from ${employ_table}
+		where ${work_area} = #{work_area}
+	</select>
+	
+	<select id="select_by_career" resultType="EmpBoardVO">
+		select * from ${employ_table}
+		where ${career} = #{career}
+	</select>
+	
+	<select id="select_by_education" resultType="EmpBoardVO">
+		select * from ${employ_table}
+		where ${education} = #{education}
+	</select>
+	
+	
+	<delete id="empdelete">
+		delete from ${employ_table}
+		where ${eno} = #{eno}
+	</delete>
+	
+	 <select id="total_count" resultType="Integer">
+	 	select count(*) total_cnt from ${employ_table}
+	 </select>
+	 
+	 <select id="paging" resultType="EmpBoardVO">
+	 	select 
+	 	b.${eno}, b.${employ_title}, b.${userid}, b.${e_date}, b.${hit} 
+	 	from ( 
+	 		select rownum rn, a.* 
+	 		from (
+	 			select * from ${employ_table} order by ${eno} desc 
+	 		)a
+	 	)b 
+	 	where rn between #{start} and #{end}
+	 </select>
+	 
+	 <!-- 게시판 조회수 -->
+	 <update id="boardHit" parameterType="int">
+    	UPDATE ${employ_table} SET
+    	HIT = HIT+1
+    	WHERE ${eno} = #{eno}
+    </update>
+	
+</mapper>

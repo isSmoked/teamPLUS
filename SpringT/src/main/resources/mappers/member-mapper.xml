@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.MemberMapper">
+
+	<!-- member_table -->
+	<!-- 회원가입 -->
+	<insert id="insert">
+		insert into ${member_table} 
+		(${userid}, ${password}, ${email}, ${phone}, ${part})
+		values (#{userid}, #{password}, #{email}, #{phone}, #{part})
+	</insert>
+
+	<!-- checkAjax ID & Email -->
+	<select id="checkAjax" resultType="integer">
+		select count(*)
+		from ${member_table}
+		where 
+		<choose>
+			<when test="userid != null">${userid} = #{userid}
+				<if test="password != null"> and ${password} = #{password}</if>
+			</when>
+			<when test="email != null">${email} = #{email}</when>
+		</choose>
+	</select>
+
+	<!-- 로그인 -->
+	<select id="login" resultType="MemberVO">
+		select ${userid}, ${password}, ${part}, ${blacklist} 
+		from ${member_table}
+		where ${userid} = #{userid} and ${password} = #{password}
+	</select>
+
+	<!-- 로그인 정보조회 -->
+	<select id="selectLogin" resultType="MemberVO">
+		select * from
+		${member_table} 
+		where ${userid} = #{userid}
+	</select>
+	
+	
+	<!-- 로그인 정보 수정 -->
+	<update id="updateLoginInfo">
+		update ${member_table}
+		set 
+		<choose>
+			<when test="password != null">${password} = #{password}</when>
+			<when test="phone != null">${phone} = #{phone}</when>
+			<when test="email != null">${email} = #{email}</when>
+		</choose>
+		where ${userid} = #{userid}
+	</update>
+
+	
+	<!-- detail_personal_table -->
+	<!-- 개인회원 정보조회 -->
+	<select id="selectDetailPersonal" resultType="MemberVO">
+		select * from ${detail_personal_table} 
+		where ${userid} = #{userid}
+	</select>
+
+	<!-- 개인회원 정보수정 -->
+	<update id="updateDetailPersonal">
+		update ${detail_personal_table}
+		set 
+		<choose>
+			<when test="personal_json != null">
+				${personal_json} = #{personal_json},
+				${personal_update_date} = sysdate
+			</when>
+			<otherwise>
+				${personal_name} = #{personal_name}, 
+				${personal_birth} = #{personal_birth}, 
+				${personal_gender} = #{personal_gender}, 
+				${personal_address} = #{personal_address}, 
+				${personal_update_date} = sysdate
+			</otherwise>
+		</choose>
+		where ${userid} = #{userid}
+	</update>
+
+	<!-- detail_company_table -->
+	<!-- 기업회원 정보조회 -->
+	<select id="selectDetailCompany" resultType="MemberVO">
+		select * from ${detail_company_table} 
+		where ${userid} = #{userid}
+	</select>
+	
+	<!-- 기업회원 정보수정 -->
+	<update id="updateDetailCompany">
+		update ${detail_company_table}
+		set 
+		<choose>
+			<when test="company_json != null">
+				${company_json} = #{company_json},
+				${company_update_date} = sysdate
+			</when>
+			<when test="company_manager != null">
+				${company_manager} = #{company_manager}, 
+				${company_manager_phone} = #{company_manager_phone}, 
+				${company_manager_email} = #{company_manager_email},
+				${company_update_date} = sysdate
+			</when>
+			<otherwise>
+				${company_name} = #{company_name}, 
+				${company_president} = #{company_president}, 
+				${company_number} = #{company_number}, 
+				${company_address} = #{company_address},
+				${company_update_date} = sysdate
+			</otherwise>
+		</choose>
+		where ${userid} = #{userid}
+	</update>
+
+	<!-- 아이디 찾기 -->
+	<select id="findId" resultType="string">
+		select ${userid}
+		from ${member_table}
+		where ${email} = #{email}
+	</select>
+	
+	<!-- 비밀번호 찾기(회원검색) -->
+	<select id="findPwCheck" resultType="integer">
+		select count(*)
+		from ${member_table}
+		where ${userid} = #{userid} and ${email} = #{email}
+	</select>
+
+	<!-- 이메일 전송을 위한 임시 비밀번호 생성 -->	
+	<update id="newPassword" parameterType="MemberVO">
+		update ${member_table}
+		set ${password} = #{password}
+		where ${email} = #{email} and ${userid} = #{userid}
+	</update>
+	
+</mapper>

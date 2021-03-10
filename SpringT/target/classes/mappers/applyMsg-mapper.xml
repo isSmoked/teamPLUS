@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.spring.prj.applyMsgBoardMapper">
+
+	<insert id="create">
+		insert into ${recruit_apply_table} 
+		(${aplid},
+		${targetid},
+		${sender},
+		${aplbirth},
+		${aplgender},
+		${apladdress},
+		${aploaddress},
+		${apldetailaddress},
+		${apleducation},
+		${aplcareer},
+		${international_actvt},
+		${aplcertificate},
+		${aplawards},
+		${aploverseas_exprnc},
+		${apllanguage},
+		${aplportfolio},
+		${aplmltr_service},
+		${aplselfintroduce},
+		${aplname},
+		${aplemail},
+		${aplphone})
+		values
+		(REC_APPLY_SEQ.NEXTVAL,
+		#{targetid},
+		#{sender},
+		#{aplbirth},
+		#{aplgender},
+		#{apladdress},
+		#{aploaddress},
+		#{apldetailaddress},
+		#{apleducation},
+		#{aplcareer},
+		#{international_actvt},
+		#{aplcertificate},
+		#{aplawards},
+		#{aploverseas_exprnc},
+		#{apllanguage},
+		#{aplportfolio},
+		#{aplmltr_service},
+		#{aplselfintroduce},
+		#{aplname},
+		#{aplemail},
+		#{aplphone})
+	</insert>
+	
+</mapper>

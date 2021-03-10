@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- DB 테이블과 컬럼들을 mapper 매핑을 위한 변수 선언 -->
+	<properties>
+	<!-- 
+	* property
+	- name : mapper.xml에서 사용될 이름
+	- value : DB 테이블 및 컬럼 이름
+	 -->
+	 <!-- recruit_table -->
+	 <property name="recruit_table" value="recruit_table"/>
+	 <property name="rno" value="rno"/>
+	 <property name="userid" value="userid"/>
+	 <property name="education" value="education"/>
+	 <property name="recruit_title" value="recruit_title"/>
+	 <property name="r_date" value="r_date"/>
+	 <property name="work_area" value="work_area"/>
+	 <property name="workday" value="workday"/>
+	 <property name="position" value="position"/>
+	 <property name="career" value="career"/>
+	 <property name="salary" value="salary"/>
+	 <property name="responsibility" value="responsibility"/>
+	 <property name="eligibility" value="eligibility"/>
+	 <property name="recruitstep" value="recruitstep"/>
+	 <property name="requireddoc" value="requireddoc"/>
+	 <property name="applyway" value="applyway"/>
+	 <property name="applyperiod" value="applyperiod"/>
+	 <property name="password" value="password"/>
+	 <property name="rhit" value="rhit"/>
+	 <property name="rname" value="rname"/>
+	 
+	 <!-- employ_table -->
+	 <property name="employ_table" value="employ_table"/>
+	 <property name="eno" value="eno"/>
+	 <property name="userid" value="userid"/>
+	 <property name="password" value="password"/>
+	 <property name="employ_title" value="employ_title"/>
+	 <property name="e_date" value="e_date"/>
+	 <property name="work_area" value="work_area"/>
+	 <property name="uname" value="uname"/>
+	 <property name="phone" value="phone"/>
+	 <property name="career" value="career"/>
+	 <property name="salary" value="salary"/>
+	 <property name="birth" value="birth"/>
+	 <property name="gender" value="gender"/>
+	 <property name="email" value="email"/>
+	 <property name="oaddress" value="oaddress"/>
+	 <property name="address" value="address"/>
+	 <property name="detail_address" value="detail_address"/>
+	 <property name="emplementtype" value="emplementtype"/>
+	 <property name="education" value="education"/>
+	 <property name="certificates" value="certificates"/>
+	 <property name="selfintroduce" value="selfintroduce"/>
+	 <property name="militeryservice" value="militeryservice"/>
+	 <property name="hit" value="hit"/>
+	 
+	 <!-- recruit_apply_table -->
+	 <property name="recruit_apply_table" value="recruit_apply_table"/>
+	 <property name="aplid" value="aplid"/>
+	 <property name="targetid" value="targetid"/>
+	 <property name="sender" value="sender"/>
+	 <property name="aplbirth" value="aplbirth"/>
+	 <property name="aplgender" value="aplgender"/>
+	 <property name="apladdress" value="apladdress"/>
+	 <property name="aploaddress" value="aploaddress"/>
+	 <property name="apldetailaddress" value="apldetailaddress"/>
+	 <property name="apleducation" value="apleduacation"/>
+	 <property name="aplcareer" value="aplcareer"/>
+	 <property name="international_actvt" value="international_actvt"/>
+	 <property name="aplcertificate" value="aplcertificate"/>
+	 <property name="aplawards" value="aplawards"/>
+	 <property name="aploverseas_exprnc" value="aploverseas_exprnc"/>
+	 <property name="apllanguage" value="apllanguage"/>
+	 <property name="aplportfolio" value="aplportfolio"/>
+	 <property name="aplmltr_service" value="aplmltr_service"/>
+	 <property name="aplselfintroduce" value="aplselfintroduce"/>
+	 <property name="aplname" value="aplname"/>
+	 <property name="opendate" value="opendate"/>
+	 <property name="senddate" value="senddate"/>
+	 <property name="aplemail" value="aplemail"/>
+	 <property name="aplphone" value="aplphone"/>
+	
+	 <!-- 재훈 =============================================================== -->
+	 <!-- study table -->
+	 <property name="study_table" value="study_table" />
+	 <property name="study_bno" value="study_bno"/>
+	 <property name="study_title" value="study_title"/>
+	 <property name="study_content" value="study_content"/>
+	 <property name="study_date" value="study_date"/>
+	 <property name="study_readcount" value="study_readcount"/>
+	 <property name="study_location" value="study_location"/>
+ 	 <property name="study_part" value="study_part"/>
+	 <property name="study_userid" value="study_userid" />
+	 <property name="study_crew_user" value="study_crew_user"/>
+	 <property name="study_crew_count" value="study_crew_count" />
+	 <property name="study_crew_limit" value="study_crew_limit" />
+	 <property name="study_crew_wait" value="study_crew_wait"/>
+	 <property name="study_detail_location" value="study_detail_location"/>
+	 <property name="study_crew_black" value="study_crew_black"/>
+	 
+	 <!-- chat table -->
+	 <property name="chat_table" value="chat_table" />
+	 <property name="chat_bno" value="chat_bno" />
+	 <property name="chat_content" value="chat_content" />
+	 <property name="chat_userid" value="chat_userid" />
+	 
+	 <!-- 성훈 ================================================================ -->
+	 <!-- Member -->
+	 <property name="member_table" value="member_table"/>
+	 <property name="userid" value="userid"/>
+	 <property name="password" value="password"/>
+	 <property name="email" value="email"/>
+	 <property name="phone" value="phone"/>
+	 <property name="register_date" value="register_date"/>
+	 <property name="part" value="part"/>
+	 <property name="blacklist" value="blacklist"/>
+	 
+	 <property name="table_name" value="table_name"/>
+	 
+	 <!-- Member Detail Personal -->
+	 <property name="detail_personal_table" value="detail_personal_table"/>
+	 <property name="personal_name" value="personal_name"/>
+	 <property name="personal_birth" value="personal_birth"/>
+	 <property name="personal_gender" value="personal_gender"/>
+	 <property name="personal_address" value="personal_address"/>
+	 <property name="personal_json" value="personal_json"/>
+	 <property name="personal_update_date" value="personal_update_date"/>
+	 
+	 <!-- Member Detail Company -->
+	 <property name="detail_company_table" value="detail_company_table"/>
+	 <property name="company_number" value="company_number"/>
+	 <property name="company_name" value="company_name"/>
+	 <property name="company_president" value="company_president"/>
+	 <property name="company_address" value="company_address"/>
+	 <property name="company_manager" value="company_manager"/>
+	 <property name="company_manager_phone" value="company_manager_phone"/>
+	 <property name="company_manager_email" value="company_manager_email"/>
+	 <property name="company_json" value="company_json"/>
+	 <property name="company_update_date" value="company_update_date"/>
+	 
+	 <!-- Freeboard -->
+	 <property name="freeboard_table" value="freeboard_table"/>
+	 <property name="freeboard_bno" value="freeboard_bno"/>
+	 <property name="freeboard_title" value="freeboard_title"/>
+	 <property name="freeboard_content" value="freeboard_content"/>
+	 <property name="freeboard_date" value="freeboard_date"/>
+	 <property name="freeboard_readcount" value="freeboard_readcount"/>
+	 <property name="freeboard_replycount" value="freeboard_replycount"/>
+	 <property name="freeboard_notice" value="freeboard_notice"/>
+	 
+	 <!-- QAboard -->
+	 <property name="qaboard_table" value="qaboard_table"/>
+	 <property name="qaboard_bno" value="qaboard_bno"/>
+	 <property name="qaboard_title" value="qaboard_title"/>
+	 <property name="qaboard_content" value="qaboard_content"/>
+	 <property name="qaboard_date" value="qaboard_date"/>
+	 <property name="qaboard_readcount" value="qaboard_readcount"/>
+	 <property name="qaboard_replycount" value="qaboard_replycount"/>
+	 <property name="qaboard_notice" value="qaboard_notice"/>
+	 
+	 <!-- Shareboard -->
+	 <property name="shareboard_table" value="shareboard_table"/>
+	 <property name="shareboard_bno" value="shareboard_bno"/>
+	 <property name="shareboard_title" value="shareboard_title"/>
+	 <property name="shareboard_content" value="shareboard_content"/>
+	 <property name="shareboard_date" value="shareboard_date"/>
+	 <property name="shareboard_readcount" value="shareboard_readcount"/>
+	 <property name="shareboard_replycount" value="shareboard_replycount"/>
+	 <property name="shareboard_notice" value="shareboard_notice"/>
+	 
+	 <!-- Reply -->
+	 <property name="reply_table" value="reply_table"/>
+	 <property name="reply_table_name" value="reply_table_name"/>
+	 <property name="reply_bno" value="reply_bno"/>
+	 <property name="reply_no" value="reply_no"/>
+	 <property name="reply_content" value="reply_content"/>
+	 <property name="reply_date" value="reply_date"/>
+	 <property name="tableName" value="tableName"/>
+	 
+	 <!-- Bookmark -->
+	 <property name="bookmark_table" value="bookmark_table"/>
+	 <property name="bookmark_table_name" value="bookmark_table_name"/>	 
+	 <property name="bookmark_bno" value="bookmark_bno"/>
+	 <property name="bookmark_no" value="bookmark_no"/>
+	 <property name="bookmark_date" value="bookmark_date"/>
+	 
+	 <!-- ManagerVO -->
+	 <property name="searchPart" value="searchPart"/>
+	 <property name="searchColumn" value="searchColumn"/>
+	 <property name="searchBlacklist" value="searchBlacklist"/>
+	 <property name="keyword" value="keyword"/>
+	 
+	 <!-- Search -->
+	 <property name="keyword" value="keyword"/>
+	 <property name="search" value="search"/>
+	 
+	 <!-- 끝 ================================================================ -->
+	 
+	 </properties>
+	<!-- Underscore 명명법을 Camel 명명법으로 매핑 -->
+<!-- 	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings> -->
+	<!-- 
+	typeAliases : mapper.xml의 select 리턴 타입에 들어갈 클래스 경로를 설정
+	 -->
+	<typeAliases>
+		<package name="edu.spring.prj.domain"/>
+	</typeAliases>
+</configuration>

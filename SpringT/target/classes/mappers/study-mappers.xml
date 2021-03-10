@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- SQL Query 작성 -->
+<mapper namespace="edu.spring.prj.StudyMapper">
+
+	<!-- 데이터를 등록하기 -->
+	<!-- insert에 들어갈 데이터 > content, title, part, location, userid, crewUser-userid 등록, detailLocation -->
+	<insert id="insert">
+		insert into ${study_table} (${study_title}, ${study_content}, ${study_part}, ${study_location}, ${study_userid}, ${study_crew_user}, ${study_crew_limit}, ${study_detail_location}, ${study_crew_black})
+		values (#{study_title}, #{study_content}, #{study_part}, #{study_location}, #{study_userid}, #{study_userid}, #{study_crew_limit}, #{study_detail_location}, #{study_crew_black})
+	</insert>
+
+	<!-- 전체 데이터 리스트 보여주기 -->
+	<select id="selectAll" resultType="StudyVO">
+		select * from ${study_table}
+		order by ${study_bno} desc
+	</select>
+	
+	<!-- bno로 검색한 데이터를 보여주기 -->
+	<select id="selectByBno" resultType="StudyVO">
+		select * from ${study_table}
+		where ${study_bno} = #{study_bno}
+	</select>
+	
+	<!-- 데이터를 수정하기 -->
+	<update id="update">
+		update ${study_table}
+		set ${study_title} = #{study_title}, ${study_content} = #{study_content},
+			${study_part} = #{study_part}, ${study_location} = #{study_location},
+			${study_userid} = #{study_userid}, ${study_crew_limit} = #{study_crew_limit},
+			${study_detail_location} = #{study_detail_location}
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+	<!-- 데이터 삭제하기 -->
+	<delete id="delete">
+		delete from ${study_table}
+		where ${study_bno} = #{study_bno}
+	</delete>
+
+	<!-- 페이지 처리 -->
+	<select id="totalCount" resultType="Integer">
+		select count(*) total_cnt from ${study_table}
+	</select>
+	
+	<select id="paging" resultType="StudyVO">
+		select 
+		b.${study_bno}, b.${study_title}, b.${study_content}, b.${study_date}, b.${study_userid}, b.${study_readcount},
+		b.${study_crew_user}, b.${study_crew_count}, b.${study_crew_limit}, b.${study_location}, b.${study_detail_location}, b.${study_crew_wait}
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${study_table} order by ${study_bno} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select>
+
+	<!-- 게시글 검색 -->
+	<select id="selectByUserid" resultType="StudyVO">
+         select * from ${study_table}
+         where ${study_userid} like #{study_userid}
+     </select>
+     
+     <select id="selectByTitleContent" resultType="StudyVO">
+         select * from ${study_table}
+         where ${study_title} like #{keyword} or
+             ${study_content} like #{keyword}
+     </select>
+	
+     <select id="selectByLocation" resultType="StudyVO">
+     	select * from ${study_table}
+     	where ${study_detail_location} like #{keyword} or
+     		${study_location} like #{keyword}
+     </select>
+     
+	<!-- 조회수 업데이트 -->
+	<update id="updateReadCount">
+		update ${study_table}
+		set ${study_readcount} = nvl(${study_readcount}, 0) + 1
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+	<!-- 참여인원 업데이트 -->
+	
+	<!-- 대기명단의 인원 > 참여자로 등록 -->
+	<update id="updateToCrewCount">
+		update ${study_table}
+		set ${study_crew_count} = #{study_crew_count}, ${study_crew_user} = #{study_crew_user},
+			${study_crew_wait} = #{study_crew_wait}
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+	<!-- 대기명단으로 참여자 추가 -->
+	<update id="updateToCrewWait">
+		update ${study_table}
+		set ${study_crew_wait} = #{study_crew_wait}
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+	<!-- 참여인원 제거 -->
+	<update id="deleteToCrewCount">
+		update ${study_table}
+		set ${study_crew_user} = #{study_crew_user}, ${study_crew_count} = #{study_crew_count},
+			${study_crew_black} = #{study_crew_black}
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+	<!-- 대기인원 제거 -->
+	<update id="deleteToCrewWait">
+		update ${study_table}
+		set ${study_crew_wait} = #{study_crew_wait}, ${study_crew_black} = #{study_crew_black}
+		where ${study_bno} = #{study_bno}
+	</update>
+	
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.QAboardMapper">
+
+	<insert id="insert">
+		insert into ${qaboard_table} (${qaboard_title}, ${qaboard_content}, ${qaboard_notice}, ${userid})
+		values (#{qaboard_title}, #{qaboard_content}, #{qaboard_notice}, #{userid})
+	</insert>		
+		 
+	<select id="select_all" resultType="QAboardVO">
+		select * from ${qaboard_table}
+		order by ${qaboard_bno} desc
+	</select>
+	
+	<select id="select_by_bno" resultType="QAboardVO">
+		select * from ${qaboard_table}
+		where ${qaboard_bno} = #{qaboard_bno}
+	</select>
+	
+	<update id="update">
+		update ${qaboard_table}
+		set ${qaboard_title} = #{qaboard_title}, ${qaboard_content} = #{qaboard_content}, ${qaboard_date} = sysdate, ${qaboard_notice} = #{qaboard_notice}
+		where ${qaboard_bno} = #{qaboard_bno}
+	</update>
+	
+	<delete id="delete">
+		delete from ${qaboard_table}
+		where ${qaboard_bno} = #{qaboard_bno}
+	</delete>
+	
+	<select id="total_count" resultType="Integer">
+		select count(*) total_cnt from ${qaboard_table} <include refid="search"/>
+	</select>
+	
+	<select id="paging" resultType="QAboardVO">
+		select 
+		*
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${qaboard_table} <include refid="search"/> order by ${qaboard_date} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select> 
+	
+	<sql id="search">
+		<choose>
+			<when test="searchType == 'all'">where ${qaboard_title} like '%'||#{keyword}||'%' or ${qaboard_content} like '%'||#{keyword}||'%' or ${userid} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'title'">where ${qaboard_title} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'content'">where ${qaboard_content} like '%'||#{keyword}||'%'</when>
+			<when test="searchType == 'writer'">where ${userid} = #{keyword}</when>
+			<when test="searchType == 'tc'">where ${qaboard_title} like '%'||#{keyword}||'%' or ${qaboard_content} like '%'||#{keyword}||'%'</when>
+			<otherwise></otherwise>
+		</choose>
+	</sql>
+	
+	<select id="select_by_userid" resultType="QAboardVO">
+		select * from ${qaboard_table}
+		where ${userid} like #{userid}
+	</select>
+	
+	<select id="select_by_title_content" resultType="QAboardVO">
+		select * from ${qaboard_table}
+		where ${qaboard_title} like #{keyword} or
+			${qaboard_content} like #{keyword}
+			order by ${qaboard_date} desc
+	</select>
+	
+	<update id="update_reply_count">
+		update ${qaboard_table}
+		set ${qaboard_replycount} = ${qaboard_replycount} + #{amount}
+		where ${qaboard_bno} = #{bno}
+	</update>
+	
+	<select id="select_notice" resultType="QAboardVO">
+		select * from ${qaboard_table}
+		where not ${qaboard_notice} = 0 order by ${qaboard_notice} desc, ${qaboard_date} desc
+	</select>
+	 
+</mapper>

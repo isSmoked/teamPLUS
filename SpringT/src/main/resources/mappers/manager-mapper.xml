@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.spring.prj.ManagerMapper">
+
+	<!-- 공지글 변경 -->
+	<update id="update_notice">
+		update 
+		<choose>
+			<when test="table_name == 'freeboard_table'">${freeboard_table} set ${freeboard_notice} = #{freeboard_notice} where ${freeboard_bno} = #{freeboard_bno}</when>
+			<when test="table_name == 'qaboard_table'">${qaboard_table} set ${qaboard_notice} = #{freeboard_notice} where ${qaboard_bno} = #{freeboard_bno}</when>
+			<when test="table_name == 'shareboard_table'">${shareboard_table} set ${shareboard_notice} = #{freeboard_notice} where ${shareboard_bno} = #{freeboard_bno}</when>
+		</choose>
+	</update>
+	
+	<!-- 블랙리스트 업데이트 -->
+ 	<update id="update_blacklist">
+		update ${member_table}
+		set ${blacklist} = #{blacklist}
+		where ${userid} = #{userid}
+	</update>
+
+	<!-- 상세정보 검색 -->
+	<select id="detail" resultType="MemberVO">
+		select * from <include refid="table"/>
+		where ${userid} = #{userid}
+	</select>
+	
+	<sql id="table">
+		<choose>
+			<when test="table_name == 'personal'">${detail_personal_table}</when>
+			<otherwise>${detail_company_table}</otherwise>
+		</choose>
+	</sql>
+
+ 	<!-- (회원조회) ajax 검색 paging -->
+	<select id="ajax_total_count" resultType="Integer">
+		select count(*) total_cnt from ${member_table} 
+			<where> 
+				<if test="keyword != null">
+					<choose>
+						<when test="searchColumn == 'all'">(userid || email || phone)</when>
+						<when test="searchColumn == 'userid'">userid</when>
+						<when test="searchColumn == 'email'">email</when>
+						<when test="searchColumn == 'phone'">phone</when>
+					</choose>
+					like '%'||#{keyword}||'%'
+				</if>
+				<if test="searchBlacklist != null">
+					AND ${blacklist} = #{searchBlacklist}
+				</if>
+				<if test="searchPart != null and searchPart != ''">
+					AND ${part} in 
+					<foreach collection="searchPart" item="part" open="(" close=")" separator="," >
+						#{part}
+					</foreach>
+				</if>
+			</where>
+	</select>
+	
+ 	<!-- (회원조회) ajax 검색 searching -->	
+	<select id="ajax_paging" resultType="MemberVO">
+		select 
+		b.${userid}, b.${email}, b.${phone}, b.${register_date}, b.${part}, b.${blacklist}
+		from ( 
+			select rownum rn, a.* 
+			from (
+				select * from ${member_table}
+				<where> 
+				<if test="keyword != null">
+					<choose>
+						<when test="searchColumn == 'all'">(userid || email || phone)</when>
+						<when test="searchColumn == 'userid'">userid</when>
+						<when test="searchColumn == 'email'">email</when>
+						<when test="searchColumn == 'phone'">phone</when>
+					</choose>
+					like '%'||#{keyword}||'%'
+				</if>
+				<if test="searchBlacklist != null">
+					AND ${blacklist} = #{searchBlacklist}
+				</if>
+				<if test="searchPart != null and searchPart != ''">
+					AND ${part} in 
+					<foreach collection="searchPart" item="part" open="(" close=")" separator="," >
+						#{part}
+					</foreach>
+				</if>
+				</where>
+				order by ${register_date} desc 
+			)a
+		)b 
+		where rn between #{start} and #{end}
+	</select>
+	
+	<!-- (회원조회) 회원삭제 -->
+	<delete id="delete">
+		delete from ${member_table}
+		where ${userid} = #{userid}
+	</delete>
+	
+	<!-- 관리자등록 -->
+	<insert id="register">
+		insert into ${member_table} 
+		(${userid}, ${password}, ${email}, ${phone}, ${part})
+		values (#{userid}, #{password}, #{email}, #{phone}, #{part})
+	</insert>
+	
+</mapper>
